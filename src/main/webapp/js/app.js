@@ -11,18 +11,19 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _elements_Form__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./elements/Form */ "./assets/js/elements/Form.js");
 
-var createForm = document.querySelector("form#create-form");
-createForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-  var form = new _elements_Form__WEBPACK_IMPORTED_MODULE_0__["default"]();
-  var validate = form.validate();
-  if (validate) {
-    alert('Form success');
-  } else {
-    alert('Form not validate');
-    console.log('Errors :: ', form.errors);
-  }
-});
+
+// const createForm = document.querySelector("form#create-form")
+
+// createForm.addEventListener('submit', function(e) {
+//     e.preventDefault()
+//     const name = document.querySelector('input[name=name]')
+//     const email = document.querySelector('input[name=email]')
+//     const phone = document.querySelector('input[name=phone]')
+//     const date = document.querySelector('input[name=date]')
+// })
+
+var form = new _elements_Form__WEBPACK_IMPORTED_MODULE_0__["default"]();
+form.init();
 
 /***/ }),
 
@@ -41,43 +42,57 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 var Form = /*#__PURE__*/function () {
   function Form() {
     _classCallCheck(this, Form);
-    _defineProperty(this, "data", {
-      name: null,
-      email: null,
-      phone: null,
-      date: null
-    });
-    _defineProperty(this, "errors", {});
-    this.data.name = document.querySelector('input[name=name]');
-    this.data.email = document.querySelector('input[name=email]');
-    this.data.phone = document.querySelector('input[name=phone]');
-    this.data.date = document.querySelector('input[name=date]');
   }
   return _createClass(Form, [{
+    key: "init",
+    value: function init() {
+      this.submitHandler();
+    }
+  }, {
     key: "validate",
-    value: function validate() {
-      var validator = new lumina_form_validator__WEBPACK_IMPORTED_MODULE_0__.Validator({
-        name: this.data.name.value,
-        email: this.data.email.value,
-        phone: this.data.phone.value,
-        date: this.data.date.value
-      });
+    value: function validate(data) {
+      var validator = new lumina_form_validator__WEBPACK_IMPORTED_MODULE_0__.Validator(data);
       validator.attr('name').label('Name').required();
       validator.attr('email').label('Email address').required().email();
       validator.attr('phone').label('Phone number').required();
       validator.attr('date').label('Date of Joining').required();
       if (!validator.isSuccess()) {
-        this.errors = validator.getErrors();
+        var errors = validator.getErrors();
+        console.log('Errors :: ', errors);
         return false;
       }
       return true;
+    }
+  }, {
+    key: "submitHandler",
+    value: function submitHandler() {
+      var form = document.querySelector("form#create-form");
+      var name = document.querySelector('input[name=name]');
+      var email = document.querySelector('input[name=email]');
+      var phone = document.querySelector('input[name=phone]');
+      var date = document.querySelector('input[name=date]');
+      var self = this;
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var data = {
+          name: name.value,
+          email: email.value,
+          phone: phone.value,
+          date: date.value
+        };
+        if (self.validate(data)) {
+          alert("Form Success");
+          console.log('Data :: ', data);
+        } else {
+          alert("Form failed");
+        }
+      });
     }
   }]);
 }();

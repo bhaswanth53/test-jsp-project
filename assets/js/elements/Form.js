@@ -1,29 +1,12 @@
 import { Validator } from "lumina-form-validator"
 
 class Form {
-    data = {
-        name: null,
-        email: null,
-        phone: null,
-        date: null
+    init() {
+        this.submitHandler()
     }
 
-    errors = {}
-
-    constructor() {
-        this.data.name = document.querySelector('input[name=name]')
-        this.data.email = document.querySelector('input[name=email]')
-        this.data.phone = document.querySelector('input[name=phone]')
-        this.data.date = document.querySelector('input[name=date]')
-    }
-
-    validate() {
-        const validator = new Validator({
-            name: this.data.name.value,
-            email: this.data.email.value,
-            phone: this.data.phone.value,
-            date: this.data.date.value
-        })
+    validate(data) {
+        const validator = new Validator(data)
 
         validator.attr('name').label('Name').required()
         validator.attr('email').label('Email address').required().email()
@@ -31,11 +14,40 @@ class Form {
         validator.attr('date').label('Date of Joining').required()
 
         if(!validator.isSuccess()) {
-            this.errors = validator.getErrors()
+            let errors = validator.getErrors()
+            console.log('Errors :: ', errors)
             return false
         }
 
         return true
+    }
+
+    submitHandler() {
+        const form = document.querySelector("form#create-form")
+        const name = document.querySelector('input[name=name]')
+        const email = document.querySelector('input[name=email]')
+        const phone = document.querySelector('input[name=phone]')
+        const date = document.querySelector('input[name=date]')
+
+        const self = this
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault()
+
+            const data = {
+                name: name.value,
+                email: email.value,
+                phone: phone.value,
+                date: date.value
+            }    
+
+            if(self.validate(data)) {
+                alert("Form Success")
+                console.log('Data :: ', data)
+            } else {
+                alert("Form failed")
+            }
+        })
     }
 }
 
