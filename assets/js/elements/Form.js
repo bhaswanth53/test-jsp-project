@@ -16,10 +16,35 @@ class Form {
         if(!validator.isSuccess()) {
             let errors = validator.getErrors()
             console.log('Errors :: ', errors)
+            this.populateErrors(errors)
             return false
         }
 
         return true
+    }
+
+    populateErrors(errors) {
+        const name = document.querySelector("span#name-error")
+        const email = document.querySelector("span#email-error")
+        const phone = document.querySelector("span#phone-error")
+        const date = document.querySelector("span#date-error")
+
+        name.textContent = errors?.name
+        email.textContent = errors?.email
+        phone.textContent = errors?.phone
+        date.textContent = errors?.date
+    }
+
+    clearErrors() {
+        const name = document.querySelector("span#name-error")
+        const email = document.querySelector("span#email-error")
+        const phone = document.querySelector("span#phone-error")
+        const date = document.querySelector("span#date-error")
+
+        name.textContent = ''
+        email.textContent = ''
+        phone.textContent = ''
+        date.textContent = ''
     }
 
     submitHandler() {
@@ -42,8 +67,7 @@ class Form {
             }    
 
             if(self.validate(data)) {
-                alert("Form Success")
-                console.log('Data :: ', data)
+                form.submit()
             } else {
                 alert("Form failed")
             }

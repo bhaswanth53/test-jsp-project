@@ -65,9 +65,34 @@ var Form = /*#__PURE__*/function () {
       if (!validator.isSuccess()) {
         var errors = validator.getErrors();
         console.log('Errors :: ', errors);
+        this.populateErrors(errors);
         return false;
       }
       return true;
+    }
+  }, {
+    key: "populateErrors",
+    value: function populateErrors(errors) {
+      var name = document.querySelector("span#name-error");
+      var email = document.querySelector("span#email-error");
+      var phone = document.querySelector("span#phone-error");
+      var date = document.querySelector("span#date-error");
+      name.textContent = errors === null || errors === void 0 ? void 0 : errors.name;
+      email.textContent = errors === null || errors === void 0 ? void 0 : errors.email;
+      phone.textContent = errors === null || errors === void 0 ? void 0 : errors.phone;
+      date.textContent = errors === null || errors === void 0 ? void 0 : errors.date;
+    }
+  }, {
+    key: "clearErrors",
+    value: function clearErrors() {
+      var name = document.querySelector("span#name-error");
+      var email = document.querySelector("span#email-error");
+      var phone = document.querySelector("span#phone-error");
+      var date = document.querySelector("span#date-error");
+      name.textContent = '';
+      email.textContent = '';
+      phone.textContent = '';
+      date.textContent = '';
     }
   }, {
     key: "submitHandler",
@@ -87,8 +112,7 @@ var Form = /*#__PURE__*/function () {
           date: date.value
         };
         if (self.validate(data)) {
-          alert("Form Success");
-          console.log('Data :: ', data);
+          form.submit();
         } else {
           alert("Form failed");
         }
