@@ -16,12 +16,15 @@
         <div class="container">
             <h1>Create Employee</h1>
 
-            <c:if test="${message != null and not empty message and message != ""}">
+            <% 
+                String message = (String) request.getAttribute("message");
+                if (message != null && !message.trim().isEmpty()) { 
+            %>
                 <div class="alert alert-primary alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     ${message}
                 </div>
-            </c:if>
+            <% } %>
     
             <form action="${pageContext.request.contextPath}/create" method="POST" id="create-form">
                 <div class="row">
