@@ -3,6 +3,7 @@ package com.example.servlets;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,23 +57,41 @@ public class CreateServlet extends HttpServlet {
             return;
         }
 
-        // Connection and statement
+        // Connection and statements
         Connection conn = null;
-        PreparedStatement statement = null;
+        PreparedStatement checkStmt = null;
+        PreparedStatement insertStmt = null;
+        ResultSet rs = null;
+
         try {
             conn = DatabaseConnection.getConnection();  // Get a new connection
             if (conn == null) {
                 throw new SQLException("Failed to establish a database connection.");
             }
 
-            String sql = "INSERT INTO employees (name, email, phone, joining_date) VALUES (?, ?, ?, ?)";
-            statement = conn.prepareStatement(sql);
-            statement.setString(1, name);
-            statement.setString(2, email);
-            statement.setString(3, phone);
-            statement.setString(4, joiningDate);
+            // Check if email already exists
+            String checkSql = "SELECT COUNT(*) FROM employees WHERE email = ?";
+            checkStmt = conn.prepareStatement(checkSql);
+            checkStmt.setString(1, email);
+            rs = checkStmt.executeQuery();
 
-            int rowsAffected = statement.executeUpdate();  // Execute the insert
+            if (rs.next() && rs.getInt(1) > 0) {
+                errors.put("email", "Email already exists in the database.");
+                request.setAttribute("errors", errors);
+                request.setAttribute("message", "Duplicate email error.");
+                request.getRequestDispatcher("/WEB-INF/views/create.jsp").forward(request, response);
+                return;
+            }
+
+            // If email does not exist, proceed with insertion
+            String insertSql = "INSERT INTO employees (name, email, phone, joining_date) VALUES (?, ?, ?, ?)";
+            insertStmt = conn.prepareStatement(insertSql);
+            insertStmt.setString(1, name);
+            insertStmt.setString(2, email);
+            insertStmt.setString(3, phone);
+            insertStmt.setString(4, joiningDate);
+
+            int rowsAffected = insertStmt.executeUpdate();  // Execute the insert
             if (rowsAffected > 0) {
                 request.setAttribute("message", "Form has been submitted successfully.");
             } else {
@@ -85,8 +104,14 @@ public class CreateServlet extends HttpServlet {
         } finally {
             // Ensure closing resources in the correct order
             try {
-                if (statement != null) {
-                    statement.close();  // Close statement first
+                if (rs != null) {
+                    rs.close();  // Close result set first
+                }
+                if (checkStmt != null) {
+                    checkStmt.close();  // Close check statement
+                }
+                if (insertStmt != null) {
+                    insertStmt.close();  // Close insert statement
                 }
                 if (conn != null) {
                     conn.close();  // Close connection last
