@@ -7,8 +7,8 @@
     </head>
     <body>
         <h1>Employee Listing</h1>
-        <a href="">
-            <button>Create Employee</button>
+        <a href="${pageContext.request.contextPath}/employees">
+            <button>Employees Listing</button>
         </a>
 
         <script src="${pageContext.request.contextPath}/js/app.js"></script>

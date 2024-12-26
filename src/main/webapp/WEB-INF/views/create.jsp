@@ -14,7 +14,12 @@
     </head>
     <body>
         <div class="container">
-            <h1>Create Employee</h1>
+            <div class="header">
+                <h1 style="text-align: center;">Employee List</h1>
+                <a href="${pageContext.request.contextPath}/employees">
+                    <button>Employees Listing</button>
+                </a>
+            </div>
 
             <% 
                 String message = (String) request.getAttribute("message");
