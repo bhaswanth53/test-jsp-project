@@ -48,10 +48,10 @@
                             <td><%= employee.getJoiningDate() %></td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="${pageContext.request.contextPath}">
+                                    <a href="${pageContext.request.contextPath}/update?id=<%= employee.getId() %>">
                                         <button class="btn btn-xs btn-info">Edit</button>
                                     </a>
-                                    <a href="${pageContext.request.contextPath}">
+                                    <a href="${pageContext.request.contextPath}/delete?id=<%= employee.getId() %>">
                                         <button class="btn btn-xs btn-danger">Delete</button>
                                 </div>
                             </td>
